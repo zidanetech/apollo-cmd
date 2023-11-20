@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+
+# Logs
+logs
+
+
+# dotenv environment variable files
+.env
+.env.test
+.env*.local
+
+# production build
+build/
