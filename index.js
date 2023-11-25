@@ -1,10 +1,9 @@
 const figlet = require("figlet");
 const { Command } = require("commander");
 const prompt = require("prompt");
-const schema = require("./utils/schema-prompt");
+const {schema, schemaMicroserviceNodeJS, schemaAttributMicroserviceNodeJS} = require("./utils/schema-prompt");
 const { classicAngularTemplate } = require("./utils/front-office");
-const { emptyNodeJSProject } = require("./utils/back-office");
-
+const { emptyNodeJSProject, microServiceNodeJSProject } = require("./utils/back-office");
 
 // function to create angular project
 function setAngularProject(name) {
@@ -44,6 +43,29 @@ function setNodeJSProject(name) {
 }
 
 
+// function to create microservice nodejs personnalized
+function setMicroserviceNodeJS(name) {
+    console.log("Microservice NodeJS creation ....");
+    prompt.start();
+    prompt.get(schemaMicroserviceNodeJS, async (err,res) => {
+        // console.log("Model : " + res.Model);
+        // console.log("Nb of attributes : " + res.Nb);
+        attributsTab = []; // its clear hhha
+
+        // Set Model's Attributs
+        for (let j = 0; j < res.Nb; j++) {
+            const a = await prompt.get(schemaAttributMicroserviceNodeJS);
+            attributsTab.push(a);
+        }
+        
+        // console.log(attributsTab);
+
+        microServiceNodeJSProject(name, res.Model, attributsTab);
+        
+        
+    });
+}
+
 
 // Extract Command
 const program = new Command();
@@ -60,6 +82,7 @@ program
 
     .option("-a, --create-angular <name>", "Create an Angular project by specifying the folder name")
     .option("-n, --create-nodejs <name>", "Create a Node JS project by specifying the project namet")
+    .option("-m, --nodejs-microservice <name>", "Create personnal microservice with Node JS")
     .parse(process.argv)
 
 // Get options
@@ -67,6 +90,7 @@ const options = program.opts();
 
 if (options.createAngular) setAngularProject(options.createAngular);
 if (options.createNodejs) setNodeJSProject(options.createNodejs);
+if (options.nodejsMicroservice) setMicroserviceNodeJS(options.nodejsMicroservice);
 
 
 
